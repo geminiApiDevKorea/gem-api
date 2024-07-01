@@ -50,7 +50,8 @@ on:
 
 env:
   PROJECT_ID: gems-gemini-api-competition #  Google Cloud project id
-  GAR_LOCATION: us-central1 # Artifact Registry location
+  GAR_LOCATION: asia-northeast3 # Artifact Registry location
+  REPOSITORY: cloud-run-source-deploy # Artifact Registry repository name
   SERVICE: gem-api # Cloud Run service name
   REGION: asia-northeast3 # Cloud Run service region
 
