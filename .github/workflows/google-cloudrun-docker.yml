@@ -46,13 +46,13 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feature/GEM-1-workflows" ]
 
 env:
-  PROJECT_ID: YOUR_PROJECT_ID # TODO: update Google Cloud project id
-  GAR_LOCATION: YOUR_GAR_LOCATION # TODO: update Artifact Registry location
-  SERVICE: YOUR_SERVICE_NAME # TODO: update Cloud Run service name
-  REGION: YOUR_SERVICE_REGION # TODO: update Cloud Run service region
+  PROJECT_ID: gems-gemini-api-competition #  Google Cloud project id
+  GAR_LOCATION: us-central1 # Artifact Registry location
+  SERVICE: gem-api # Cloud Run service name
+  REGION: asia-northeast3 # Cloud Run service region
 
 jobs:
   deploy:
