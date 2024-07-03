@@ -1,7 +1,12 @@
 spring:
+  ai:
+    vertex:
+      ai:
+        gemini:
+          projectId: ${GEMINI_PROJECT_ID}
+          location: ${GEMINI_LOCATION}
   application:
     name: gem-api
 
-  config:
-    import:
-      - config/env.yml
+#firebase:
+#  databaseUrl: ${FIREBASE_DATABASE_URL}

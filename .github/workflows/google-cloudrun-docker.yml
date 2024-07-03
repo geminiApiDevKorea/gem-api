@@ -91,6 +91,9 @@ jobs:
       # END - Docker auth and build
 
       - name: Deploy to Cloud Run
+        env:
+          GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
+          GEMINI_LOCATION: ${{ secrets.GEMINI_LOCATION }}
         run: |-
           gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME \
           --platform managed \
