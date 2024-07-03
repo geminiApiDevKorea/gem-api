@@ -92,7 +92,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |-
-          gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_IMAGE \
+          gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME \
           --platform managed \
           --region ${{ env.REGION }} \
           --allow-unauthenticated
