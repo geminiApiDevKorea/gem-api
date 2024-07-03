@@ -91,11 +91,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |-
-          gcloud run deploy ${{ env.SERVICE }} \
-          --image $IMAGE_NAME \
-          --platform managed \
-          --region ${{ env.REGION }} \
-          --allow-unauthenticated
+          gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME --platform managed --region ${{ env.REGION }} --allow-unauthenticated
 
 #      - name: Deploy to Cloud Run
 #        id: deploy
