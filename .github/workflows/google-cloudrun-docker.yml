@@ -90,7 +90,7 @@ jobs:
       # END - Docker auth and build
 
       - name: Deploy to Cloud Run
-        run: |
+        run: |-
           gcloud run deploy ${{ env.SERVICE }} \
           --image $IMAGE_NAME \
           --platform managed \
