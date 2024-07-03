@@ -94,6 +94,7 @@ jobs:
         env:
           GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
           GEMINI_LOCATION: ${{ secrets.GEMINI_LOCATION }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         run: |-
           gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME \
           --platform managed \
