@@ -18,4 +18,9 @@ class ChatController(
             .call()
             .chatResponse()
     }
+
+    @GetMapping("hello")
+    fun hello(): String {
+        return "hello"
+    }
 }
