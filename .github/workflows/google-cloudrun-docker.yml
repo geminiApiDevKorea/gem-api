@@ -94,13 +94,12 @@ jobs:
         env:
           GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
           GEMINI_LOCATION: ${{ secrets.GEMINI_LOCATION }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         run: |-
           gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME \
           --platform managed \
           --region ${{ env.REGION }} \
           --allow-unauthenticated \
-          --set-env-vars GEMINI_PROJECT_ID=${{ secrets.GEMINI_PROJECT_ID }},GEMINI_LOCATION=${{ secrets.GEMINI_LOCATION }},GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GCP_CREDENTIALS }}
+          --set-env-vars GEMINI_PROJECT_ID=${{ secrets.GEMINI_PROJECT_ID }},GEMINI_LOCATION=${{ secrets.GEMINI_LOCATION }}
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
