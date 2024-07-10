@@ -12,24 +12,24 @@ import java.io.FileInputStream
 
 @Configuration
 class FirebaseConfig {
-//
-//    @Bean
-//    fun firebaseApp(@Value("\${firebase.databaseUrl}") databaseUrl: String): FirebaseApp? {
-//
-//        val serviceAccount = this::class.java.classLoader.getResourceAsStream("firebase/account.json")
-//
-//        logger().warn(serviceAccount.toString())
-//        val options: FirebaseOptions = FirebaseOptions.builder()
-//            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+
+    @Bean
+    fun firebaseApp(): FirebaseApp? {
+
+        val serviceAccount = this::class.java.classLoader.getResourceAsStream("firebase/account.json")
+
+        logger().warn(serviceAccount.toString())
+        val options: FirebaseOptions = FirebaseOptions.builder()
+            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
 //            .setDatabaseUrl(databaseUrl)
-//            .build()
-//
-//        logger().info("Firebase init success")
-//
-//        return FirebaseApp.initializeApp(options)?: throw RuntimeException("FirebaseApp init failed")
-//    }
-//
-//    @Bean
-//    fun getFirebaseAuth(firebaseApp: FirebaseApp): FirebaseAuth = FirebaseAuth.getInstance(firebaseApp)
+            .build()
+
+        logger().info("Firebase init success")
+
+        return FirebaseApp.initializeApp(options)?: throw RuntimeException("FirebaseApp init failed")
+    }
+
+    @Bean
+    fun getFirebaseAuth(firebaseApp: FirebaseApp): FirebaseAuth = FirebaseAuth.getInstance(firebaseApp)
 
 }
