@@ -5,10 +5,12 @@ import com.jyami.gemapi.utils.MapperUtil
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
+// null 처리는 firebase 를 사용함에 따라 어쩔 수 없이 발생한 문제이다.
 data class User(
-    val id: String,
-    val name: String,
-    val email: String
+    val id: String? = null,
+    val name: String? = null,
+    val email: String? = null,
+    val agreement: Boolean = false
 ) : UserDetails {
 
     fun toMap(): Map<String, Any> {
@@ -24,6 +26,6 @@ data class User(
     }
 
     override fun getUsername(): String {
-        return name
+        return name.orEmpty()
     }
 }

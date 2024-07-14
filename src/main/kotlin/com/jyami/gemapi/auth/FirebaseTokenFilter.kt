@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 class FirebaseTokenFilter(
     private val userService: UserService,
     private val firebaseAuth: FirebaseAuth
-): OncePerRequestFilter() {
+) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -42,9 +42,9 @@ class FirebaseTokenFilter(
 
         // User를 가져와 SecurityContext에 저장한다.
         try {
-            val user = userService.loadUserById(decodedToken.uid)
+            val user = userService.loadUserById(decodedToken.uid) ?: throw NoSuchElementException("user not found")
             val authentication = UsernamePasswordAuthenticationToken(
-                user, null, user.authorities
+                user, null, user?.authorities
             )
             SecurityContextHolder.getContext().authentication = authentication
         } catch (e: NoSuchElementException) {

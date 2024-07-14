@@ -1,8 +1,7 @@
 package com.jyami.gemapi.controller
 
-import com.google.firebase.auth.UserInfo
+import com.jyami.gemapi.endpoint.AgreementRequest
 import com.jyami.gemapi.endpoint.EmptyResponse
-import com.jyami.gemapi.endpoint.RegisterInfoRequest
 import com.jyami.gemapi.endpoint.StatusCode
 import com.jyami.gemapi.endpoint.UserInfoResponse
 import com.jyami.gemapi.repository.user.User
@@ -11,31 +10,48 @@ import com.jyami.gemapi.service.UserService
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
-@RestController("user")
+@RestController
+@RequestMapping("/users")
 class UserController(
     val userService: UserService,
     val authService: AuthService
 
 ) {
 
-    @PostMapping
+    @PostMapping("")
     fun registerUser(
-        @RequestHeader("Authorization") authorization: String,
-        @RequestBody userDto: RegisterInfoRequest
-    ): EmptyResponse {
+        @RequestHeader("Authorization") authorization: String
+    ): UserInfoResponse {
         val validateAndGetUserToken = authService.validateAndGetUserToken(authorization)
-        userService.saveUser(userDto, validateAndGetUserToken)
-        return EmptyResponse(StatusCode.OK)
+
+        val user = userService.loadUserById(validateAndGetUserToken.uid)
+        if (user == null) {
+            val savedUser = userService.saveUser(validateAndGetUserToken)
+            return UserInfoResponse(savedUser)
+        }
+        return UserInfoResponse(user)
+    }
+
+    @PutMapping("/agreement")
+    fun agreementTrue(
+        authentication: Authentication,
+        @RequestBody agreementRequest: AgreementRequest
+    ): UserInfoResponse {
+        val user = (authentication.principal as User)
+        userService.agreementUpdate(user, agreementRequest.agreement)
+        return UserInfoResponse(user)
     }
 
     @GetMapping("/me")
     fun getUserMe(authentication: Authentication): UserInfoResponse {
-        val user = (authentication.getPrincipal() as User)
+        val user = (authentication.principal as User)
         return UserInfoResponse(user)
     }
 }

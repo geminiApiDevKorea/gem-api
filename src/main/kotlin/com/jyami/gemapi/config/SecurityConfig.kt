@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -27,8 +28,12 @@ class SecurityConfig(
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeRequests()
             .anyRequest().authenticated().and()
-            .addFilterBefore(FirebaseTokenFilter(userService, firebaseAuth), UsernamePasswordAuthenticationFilter::class.java)
-            .exceptionHandling{ it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))}
+            .addFilterBefore(
+                FirebaseTokenFilter(userService, firebaseAuth),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
+            .csrf{csrf -> csrf.disable()}
+            .exceptionHandling { it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) }
         return http.build()
     }
 
