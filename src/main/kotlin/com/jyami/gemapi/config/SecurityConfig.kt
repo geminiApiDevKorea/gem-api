@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @Configuration
@@ -26,36 +29,46 @@ class SecurityConfig(
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeRequests()
-            .anyRequest().authenticated().and()
-            .addFilterBefore(
-                FirebaseTokenFilter(userService, firebaseAuth),
-                UsernamePasswordAuthenticationFilter::class.java
-            )
-            .csrf{csrf -> csrf.disable()}
-            .exceptionHandling { it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) }
+        http.authorizeHttpRequests { authorizeRequests ->
+            authorizeRequests.requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(*PERMIT_DOCS_URL_ARRAY).permitAll()
+                .requestMatchers("/resource/**").permitAll()
+                .requestMatchers("/hello").permitAll()
+        }
+        .addFilterBefore(
+            FirebaseTokenFilter(userService, firebaseAuth),
+            UsernamePasswordAuthenticationFilter::class.java
+        )
+        .cors { corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()) }
+        .csrf { csrf -> csrf.disable() }
+        .exceptionHandling { it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) }
         return http.build()
     }
 
-    val PERMIT_DOCS_URL_ARRAY: Array<String> = arrayOf(
-        "/swagger-resources",
-        "/swagger-resources/**",
-        "/configuration/ui",
-        "/configuration/security",
-        "/swagger-ui.html",
-        "/webjars/**",  /* swagger v3 */
-        "/api-docs/**",
-        "/swagger-ui/**",
-    )
-
     @Bean
-    fun webSecurityCustomizer(): WebSecurityCustomizer {
-        return WebSecurityCustomizer { web ->
-            web.ignoring().requestMatchers(HttpMethod.POST, "/users")
-                .requestMatchers(*PERMIT_DOCS_URL_ARRAY)
-                .requestMatchers("/resource/**")
-                .requestMatchers("/hello")
-        }
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val corsConfiguration = CorsConfiguration()
+//        corsConfiguration.allowedOrigins = listOf("*") : domain 넣기.
+        corsConfiguration.allowedOriginPatterns = listOf("*")
+        corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        corsConfiguration.allowedHeaders = listOf("*")
+        corsConfiguration.allowCredentials = true
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", corsConfiguration)
+        return source
+    }
+
+    companion object{
+        private val PERMIT_DOCS_URL_ARRAY: Array<String> = arrayOf(
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",  /* swagger v3 */
+            "/api-docs/**",
+            "/swagger-ui/**",
+        )
     }
 
 }

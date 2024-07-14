@@ -1,10 +1,9 @@
 package com.jyami.gemapi.repository.user
 
 import com.google.cloud.firestore.Firestore
-import com.google.cloud.firestore.SetOptions
 
 class UserRepositoryFirebaseImpl(
-    val firestore: Firestore
+    private val firestore: Firestore
 ) : UserRepository {
 
 
@@ -33,11 +32,9 @@ class UserRepositoryFirebaseImpl(
     override fun saveUser(user: User): Boolean {
         val documentRef = firestore.collection(COLLECTION_NAME)
             .document(user.id!!)
-        return try {
+
+        return performBlockOperation {
             documentRef.set(user.toMap()).get()
-            true
-        } catch (e: Exception) {
-            false
         }
     }
 
@@ -45,8 +42,14 @@ class UserRepositoryFirebaseImpl(
         val documentRef = firestore.collection(COLLECTION_NAME)
             .document(user.id!!)
 
-        return try {
+        return performBlockOperation {
             documentRef.update("agreement", agreement).get()
+        }
+    }
+
+    private fun performBlockOperation(operation: () -> Unit): Boolean {
+        return try {
+            operation()
             true
         } catch (e: Exception) {
             false
