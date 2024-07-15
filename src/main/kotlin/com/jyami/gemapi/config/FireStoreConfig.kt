@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 class FireStoreConfig {
 
     @Bean
-    fun getFireStore(firebaseApp: FirebaseApp): Firestore {
+    fun fireStore(firebaseApp: FirebaseApp): Firestore {
         return FirestoreClient.getFirestore("gem-api") ?: throw RuntimeException("FireStore init failed")
     }
 
