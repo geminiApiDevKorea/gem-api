@@ -29,13 +29,7 @@ class SecurityConfig(
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeHttpRequests { authorizeRequests ->
-            authorizeRequests.requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers(*PERMIT_DOCS_URL_ARRAY).permitAll()
-                .requestMatchers("/resource/**").permitAll()
-                .requestMatchers("/hello").permitAll()
-        }
-        .addFilterBefore(
+        http.addFilterBefore(
             FirebaseTokenFilter(userService, firebaseAuth),
             UsernamePasswordAuthenticationFilter::class.java
         )
@@ -43,6 +37,16 @@ class SecurityConfig(
         .csrf { csrf -> csrf.disable() }
         .exceptionHandling { it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) }
         return http.build()
+    }
+
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer { web ->
+            web.ignoring().requestMatchers(HttpMethod.POST, "/users")
+                .requestMatchers(*PERMIT_DOCS_URL_ARRAY)
+                .requestMatchers("/resource/**")
+                .requestMatchers("/hello")
+        }
     }
 
     @Bean

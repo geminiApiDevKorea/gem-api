@@ -15,4 +15,4 @@ springdoc:
     path: /swagger-ui.html
 logging:
   level:
-    root: debug
+    root: info

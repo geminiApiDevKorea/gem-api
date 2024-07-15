@@ -11,6 +11,8 @@ RUN gradle build -x test --parallel
 FROM --platform=linux/amd64 openjdk:21-jdk-slim
 WORKDIR /app
 
+COPY firebase-service-account.json /app/firebase-service-account.json
+
 COPY --from=builder /build/build/libs/gem-api-0.0.1-SNAPSHOT.jar gem-app.jar
 
 EXPOSE 8080

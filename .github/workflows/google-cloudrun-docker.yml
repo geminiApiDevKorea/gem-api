@@ -1,52 +1,9 @@
-# This workflow build and push a Docker container to Google Artifact Registry and deploy it on Cloud Run when a commit is pushed to the "master" branch
-#
-# Overview:
-#
-# 1. Authenticate to Google Cloud
-# 2. Authenticate Docker to Artifact Registry
-# 3. Build a docker container
-# 4. Publish it to Google Artifact Registry
-# 5. Deploy it to Cloud Run
-#
-# To configure this workflow:
-#
-# 1. Ensure the required Google Cloud APIs are enabled:
-#
-#    Cloud Run            run.googleapis.com
-#    Artifact Registry    artifactregistry.googleapis.com
-#
-# 2. Create and configure Workload Identity Federation for GitHub (https://github.com/google-github-actions/auth#setting-up-workload-identity-federation)
-#
-# 3. Ensure the required IAM permissions are granted
-#
-#    Cloud Run
-#      roles/run.admin
-#      roles/iam.serviceAccountUser     (to act as the Cloud Run runtime service account)
-#
-#    Artifact Registry
-#      roles/artifactregistry.admin     (project or repository level)
-#
-#    NOTE: You should always follow the principle of least privilege when assigning IAM roles
-#
-# 4. Create GitHub secrets for WIF_PROVIDER and WIF_SERVICE_ACCOUNT
-#
-# 5. Change the values for the GAR_LOCATION, SERVICE and REGION environment variables (below).
-#
-# NOTE: To use Google Container Registry instead, replace ${{ env.GAR_LOCATION }}-docker.pkg.dev with gcr.io
-#
-# For more support on how to run this workflow, please visit https://github.com/marketplace/actions/deploy-to-cloud-run
-#
-# Further reading:
-#   Cloud Run IAM permissions                 - https://cloud.google.com/run/docs/deploying
-#   Artifact Registry IAM permissions         - https://cloud.google.com/artifact-registry/docs/access-control#roles
-#   Container Registry vs Artifact Registry   - https://cloud.google.com/blog/products/application-development/understanding-artifact-registry-vs-container-registry
-#   Principle of least privilege              - https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege
 
 name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "master", "feature/GEM-1-gem" ]
+    branches: [ "master", "feature/GEM-5-firebase-deploy" ]
 
 env:
   PROJECT_ID: gems-gemini-api-competition #  Google Cloud project id
@@ -81,6 +38,13 @@ jobs:
         run: |-
           gcloud auth configure-docker ${{env.GAR_LOCATION}}-docker.pkg.dev
 
+      - name: Create Firebase service account file
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "firebase-service-account.json"
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
       - name: Build and Push Container
         run: |-
           IMAGE_NAME="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}"
@@ -88,18 +52,17 @@ jobs:
           docker push $IMAGE_NAME
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
-      # END - Docker auth and build
-
       - name: Deploy to Cloud Run
         env:
           GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
           GEMINI_LOCATION: ${{ secrets.GEMINI_LOCATION }}
+          FIREBASE_CONFIG_PATH: /app/firebase-service-account.json
         run: |-
           gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME \
           --platform managed \
           --region ${{ env.REGION }} \
           --allow-unauthenticated \
-          --set-env-vars GEMINI_PROJECT_ID=${{ secrets.GEMINI_PROJECT_ID }},GEMINI_LOCATION=${{ secrets.GEMINI_LOCATION }}
+          --set-env-vars GEMINI_PROJECT_ID=${{ secrets.GEMINI_PROJECT_ID }},GEMINI_LOCATION=${{ secrets.GEMINI_LOCATION }},FIREBASE_CONFIG_PATH=$FIREBASE_CONFIG_PATH
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
