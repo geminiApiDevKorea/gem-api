@@ -1,8 +1,6 @@
 package com.jyami.gemapi.controller
 
 import com.jyami.gemapi.endpoint.AgreementRequest
-import com.jyami.gemapi.endpoint.EmptyResponse
-import com.jyami.gemapi.endpoint.StatusCode
 import com.jyami.gemapi.endpoint.UserInfoResponse
 import com.jyami.gemapi.repository.user.User
 import com.jyami.gemapi.service.AuthService
