@@ -12,11 +12,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class GlobalControllerAdvice : ResponseEntityExceptionHandler() {
 
-    @ExceptionHandler(Exception::class)
-    fun handleAllExceptions(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
-        val errorDetails = ErrorResponse(StatusCode.INTERNAL_SERVER_ERROR, ex.message, request.getDescription(false))
-        return ResponseEntity<ErrorResponse>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+//    @ExceptionHandler(Exception::class)
+//    fun handleAllExceptions(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
+//        val errorDetails = ErrorResponse(StatusCode.INTERNAL_SERVER_ERROR, ex.message, request.getDescription(false))
+//        return ResponseEntity<ErrorResponse>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR)
+//    }
 
     @ExceptionHandler(AuthException::class)
     fun handlerAuthException(ex: AuthException, request: WebRequest): ResponseEntity<ErrorResponse> {

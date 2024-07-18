@@ -3,24 +3,35 @@ package com.jyami.gemapi.controller
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
+@RequestMapping("/chats")
 class ChatController(
-    private final val chatClient: ChatClient
+    private val chatClient: ChatClient
 ) {
 
-    @GetMapping("/ai")
-    fun generation(userInput: String?): ChatResponse {
+    @PostMapping("/prompt")
+    fun makeDiaryAIClient(history: String, userInput: String): ChatResponse? {
         return chatClient.prompt()
-            .user(userInput)
+            .user(makeUserInput(history, userInput))
             .call()
             .chatResponse()
     }
 
-    @GetMapping("hello")
-    fun hello(): String {
-        return "hello"
+    fun makeUserInput(history: String, userInput: String) = """
+        History:
+        $history
+        
+        User's Diaries:
+        $userInput
+    """.trimIndent()
+
+    @GetMapping("/test")
+    fun test(): String {
+        return "test"
     }
 }
