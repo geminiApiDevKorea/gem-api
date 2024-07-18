@@ -1,6 +1,8 @@
 package com.jyami.gemapi.endpoint
 
-enum class StatusCode(val code: Int) {
+import com.fasterxml.jackson.annotation.JsonValue
+
+enum class StatusCode(@JsonValue val code: Int) {
     OK(-200),
     BAD_REQUEST(-400),
     UNAUTHORIZED(-401),

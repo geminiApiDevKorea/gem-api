@@ -4,18 +4,26 @@ import com.jyami.gemapi.endpoint.ErrorResponse
 import com.jyami.gemapi.endpoint.StatusCode
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
-class GlobalControllerAdvice : ResponseEntityExceptionHandler() {
+class GlobalControllerAdvice {
 
-    @ExceptionHandler(Exception::class)
-    fun handleAllExceptions(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
-        val errorDetails = ErrorResponse(StatusCode.INTERNAL_SERVER_ERROR, ex.message, request.getDescription(false))
-        return ResponseEntity<ErrorResponse>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler(Exception::class)
+//    fun handleAllExceptions(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
+//        val errorDetails = ErrorResponse(StatusCode.INTERNAL_SERVER_ERROR, ex.message, request.getDescription(false))
+//        return ResponseEntity<ErrorResponse>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR)
+//    }
+
+    @Override
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationCustomExceptions(ex: MethodArgumentNotValidException, response: WebRequest): ResponseEntity<ErrorResponse> {
+        val errors = ex.bindingResult.fieldErrors.associate { it.field to it.defaultMessage }
+        val errorResponse = ErrorResponse(StatusCode.BAD_REQUEST, "Validation Error", errors.toString())
+        return ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(AuthException::class)
