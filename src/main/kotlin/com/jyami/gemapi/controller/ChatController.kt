@@ -1,11 +1,10 @@
 package com.jyami.gemapi.controller
 
+import com.jyami.gemapi.endpoint.DiaryChatRequest
 import com.jyami.gemapi.endpoint.DiaryChatResponse
-import com.jyami.gemapi.endpoint.DiaryDto
-import com.jyami.gemapi.endpoint.HistoryDto
+import com.jyami.gemapi.endpoint.History
 import jakarta.validation.Valid
 import org.springframework.ai.chat.client.ChatClient
-import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +21,7 @@ class ChatController(
 ) {
 
     @PostMapping("/prompt")
-    fun makeDiaryAIClient(@Valid @RequestBody diaryDto: DiaryDto): DiaryChatResponse? {
+    fun makeDiaryAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest): DiaryChatResponse? {
         val chatResponse = chatClient.prompt()
             .system(makeHistorySystem(diaryDto.history))
             .user(diaryDto.userInput)
@@ -31,7 +30,7 @@ class ChatController(
         return DiaryChatResponse(chatResponse)
     }
 
-    fun makeHistorySystem(history: List<HistoryDto>?): String {
+    fun makeHistorySystem(history: List<History>?): String {
         val historyText =
             history?.joinToString("\n") { historyDto -> "- ${historyDto.role} : ${historyDto.message}" } ?: ""
 

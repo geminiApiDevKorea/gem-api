@@ -46,6 +46,7 @@ class SecurityConfig(
                 .requestMatchers(*PERMIT_DOCS_URL_ARRAY)
                 .requestMatchers("/chats/*") // TODO: 우선 주석처리 안함.
                 .requestMatchers("/resource/**")
+                .requestMatchers("/diary/*")
                 .requestMatchers("/hello")
         }
     }
