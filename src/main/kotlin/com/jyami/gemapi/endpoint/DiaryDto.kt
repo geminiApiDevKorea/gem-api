@@ -1,20 +1,46 @@
 package com.jyami.gemapi.endpoint
 
-import jakarta.validation.Valid
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
+import org.springframework.format.annotation.DateTimeFormat
+import java.time.LocalDate
 
-data class DiaryDto(
-    @field:NotBlank
-    val userInput: String,
-    @field:Valid
-    val history: List<@Valid HistoryDto>?,
+
+data class GetDiaryResponse(
+    @field:JsonUnwrapped
+    val dateMap: Map<String, DailyDiary> = emptyMap() // key : YYYY-MM-DD
+){
+    data class DailyDiary(
+        val title: String,
+        val music: String,
+        val contents: List<ChatContent>,
+    )
+
+    data class ChatContent(
+        val role: String,
+        val message: String,
+    )
+}
+
+data class AddDailyDiaryRequest(
+//    val userId: String,
+    @field:DateTimeFormat(pattern = "yyyy-MM-dd")
+    val dateTime: LocalDate,
+    val title: String? = null, // dateTime 으로 대체될 수 있음. 없을수도
+    val contents: List<ChatContent>,
+    val music: String
+){
+    data class ChatContent(
+        @field:Pattern(regexp = "assistant|user", message = "Role must be either 'assistant' or 'user'")
+        val role: String,
+        @field:NotBlank
+        val message: String,
+    )
+}
+
+data class AddDailyDiaryResponse(
+    val title: String,
+    val music: String,
 )
 
-data class HistoryDto(
-    @field:Pattern(regexp = "assistant|user", message = "Role must be either 'assistant' or 'user'")
-    val role: String, // assistant / user
-
-    @field:NotBlank
-    val message: String
-)

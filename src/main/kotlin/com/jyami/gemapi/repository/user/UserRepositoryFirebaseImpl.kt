@@ -1,11 +1,12 @@
 package com.jyami.gemapi.repository.user
 
 import com.google.cloud.firestore.Firestore
+import com.jyami.gemapi.repository.FirebaseUtil.performBlockOperation
+import com.jyami.gemapi.repository.FirebaseUtil.toMap
 
 class UserRepositoryFirebaseImpl(
     private val firestore: Firestore
 ) : UserRepository {
-
 
     companion object {
         const val COLLECTION_NAME = "user"
@@ -46,15 +47,5 @@ class UserRepositoryFirebaseImpl(
             documentRef.update("agreement", agreement).get()
         }
     }
-
-    private fun performBlockOperation(operation: () -> Unit): Boolean {
-        return try {
-            operation()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
 
 }

@@ -3,6 +3,8 @@ package com.jyami.gemapi.config
 import com.google.cloud.firestore.Firestore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.cloud.FirestoreClient
+import com.jyami.gemapi.repository.diary.DiaryRepository
+import com.jyami.gemapi.repository.diary.DiaryRepositoryFirebaseImpl
 import com.jyami.gemapi.repository.user.UserRepository
 import com.jyami.gemapi.repository.user.UserRepositoryFirebaseImpl
 import org.springframework.context.annotation.Bean
@@ -19,6 +21,11 @@ class FireStoreConfig {
     @Bean
     fun userRepository(firestore: Firestore): UserRepository {
         return UserRepositoryFirebaseImpl(firestore)
+    }
+
+    @Bean
+    fun diaryRepository(firestore: Firestore): DiaryRepository {
+        return DiaryRepositoryFirebaseImpl(firestore)
     }
 
 }
