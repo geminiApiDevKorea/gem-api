@@ -64,14 +64,14 @@ object AISystemMessageConst {
             User : Yes, please.
             
             Assistant Comment and Recommend Music:
-            {
+            {{
               "comment": "It sounds like you're experiencing a significant amount of stress and pressure from your work environment. It's important to take a moment for yourself to relax and unwind. Finding ways to manage this stress is crucial for your well-being.",
-              "song": {
+              "song": {{
                 "singer": "Enya",
                 "title": "Only Time",
                 "reason": "This song has a calming and soothing melody that can help you relax and take a mental break from the stress you're experiencing. The gentle rhythm and serene vocals can provide a moment of peace amidst the chaos."
-              }
-            }
+              }}
+            }}
             ---
             History:
             ${makeHistoryContents(history)}
