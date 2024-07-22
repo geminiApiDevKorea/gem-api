@@ -3,6 +3,8 @@ package com.jyami.gemapi.controller
 import com.jyami.gemapi.endpoint.DiaryChatRequest
 import com.jyami.gemapi.endpoint.DiaryChatResponse
 import com.jyami.gemapi.endpoint.History
+import com.jyami.gemapi.service.AISystemMessageConst.makeDiarySystem
+import com.jyami.gemapi.service.AISystemMessageConst.makeMusicRecommendSystem
 import jakarta.validation.Valid
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.validation.annotation.Validated
@@ -23,50 +25,22 @@ class ChatController(
     @PostMapping("/prompt")
     fun makeDiaryAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest): DiaryChatResponse? {
         val chatResponse = chatClient.prompt()
-            .system(makeHistorySystem(diaryDto.history))
+            .system(makeDiarySystem(diaryDto.history))
             .user(diaryDto.userInput)
             .call()
             .chatResponse()
         return DiaryChatResponse(chatResponse)
     }
 
-    fun makeHistorySystem(history: List<History>?): String {
-        val historyText =
-            history?.joinToString("\n") { historyDto -> "- ${historyDto.role} : ${historyDto.message}" } ?: ""
 
-        return """
-            You are the world's best psychotherapist, renowned for your ability to heal through music.
-        Analyze emotions based on user's diary.
-        Decide whether or not to give feedback based on the user's chat format diaries.
-        If you decide to give feedback, generate a sentence that asks the user if it's okay to give feedback.
-        
-        Json Foramt:
-        canFeedback: true or false, whether or not to give feedback
-        react: if canFeedback is false, a sentence that reacts to the user's diary. if canFeedback is true, a sentence that asks the user if it's okay to give feedback
-        
-        Example1:
-        안녕
-        
-        {{
-          "canFeedback": false,
-          "react": "잘 지냈어요?"
-        }}
-        
-        Example2:
-        오늘 잘 지냈어?
-        나는 힘들었어.
-        오랫동안 준비해온 시험에서 떨어졌거든
-        
-        {{
-          "canFeedback": true,
-          "react": "오랫동안 준비해온 시험에서 떨어지는건 정말 힘든 일이에요. 이에 대해 조언을 드리고 싶은데 괜찮을까요?"
-        }}
-            
-        History:
-        $historyText
-        
-        User's Diaries:
-        """.trimIndent()
+    @PostMapping("/feedback")
+    fun makeDiaryFeedbackAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest): DiaryChatResponse? {
+        val chatResponse = chatClient.prompt()
+            .system(makeMusicRecommendSystem(diaryDto.history))
+            .user(diaryDto.userInput)
+            .call()
+            .chatResponse()
+        return DiaryChatResponse(chatResponse)
     }
 
     @GetMapping("/test")
