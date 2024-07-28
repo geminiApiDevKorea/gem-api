@@ -3,7 +3,6 @@ package com.jyami.gemapi.service
 import com.jyami.gemapi.endpoint.AddDailyDiaryRequest
 import com.jyami.gemapi.repository.diary.ChatContent
 import com.jyami.gemapi.repository.diary.DailyDiary
-import com.jyami.gemapi.repository.diary.Diary
 import com.jyami.gemapi.repository.diary.DiaryRepository
 import org.springframework.stereotype.Service
 
@@ -19,7 +18,7 @@ class DiaryService(
     fun saveDailyDiary(userId: String, addDailyDiaryRequest: AddDailyDiaryRequest): DailyDiary {
         val dailyDiary = with(addDailyDiaryRequest) {
             val contents = this.contents.map { ChatContent(it.role, it.message) }
-            DailyDiary(title ?: "title", music, contents = contents)
+            DailyDiary(title = title, contents = contents, music = music, tag = tag, type = type)
         }
 
         val findDailyDiary = diaryRepository.existDailyDiary(userId)

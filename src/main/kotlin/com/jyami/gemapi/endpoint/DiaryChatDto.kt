@@ -1,6 +1,5 @@
 package com.jyami.gemapi.endpoint
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
@@ -22,7 +21,14 @@ data class History(
 )
 
 data class DiaryChatResponse(
-    @field:JsonUnwrapped
-    val chatResponse: ChatResponse
+    val chatResponse: ChatResponse,
+    val music : MusicContents? = null
 ) : ResponseDto()
 
+data class MusicContents(
+    val id: String,
+    val url: String,
+    val title: String,
+    val description: String,
+    val thumbnailUrl : String
+)

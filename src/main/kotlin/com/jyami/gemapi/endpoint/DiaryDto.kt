@@ -27,9 +27,11 @@ data class AddDailyDiaryRequest(
 //    val userId: String,
     @field:DateTimeFormat(pattern = "yyyy-MM-dd")
     val dateTime: LocalDate,
-    val title: String? = null, // dateTime 으로 대체될 수 있음. 없을수도
+    val title: String,
     val contents: List<ChatContent>,
-    val music: String
+    val type: String,
+    val tag: List<String>?,
+    val music: MusicContents
 ){
     data class ChatContent(
         @field:Pattern(regexp = "assistant|user", message = "Role must be either 'assistant' or 'user'")
@@ -41,6 +43,6 @@ data class AddDailyDiaryRequest(
 
 data class AddDailyDiaryResponse(
     val title: String,
-    val music: String,
+    val music: String?,
 )
 

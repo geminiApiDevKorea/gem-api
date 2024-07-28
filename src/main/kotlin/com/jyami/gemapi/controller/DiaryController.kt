@@ -38,7 +38,7 @@ class DiaryController(
         @RequestBody addDailyDiaryRequest: AddDailyDiaryRequest
     ): AddDailyDiaryResponse {
         val dailyDiary = diaryService.saveDailyDiary(user.id!!, addDailyDiaryRequest)
-        return AddDailyDiaryResponse(dailyDiary.title!!, dailyDiary.music!!)
+        return AddDailyDiaryResponse(dailyDiary.title!!, dailyDiary.music?.title)
     }
 
     @PostMapping("/{userId}")
@@ -47,7 +47,7 @@ class DiaryController(
         @RequestBody addDailyDiaryRequest: AddDailyDiaryRequest
     ) : AddDailyDiaryResponse {
         val dailyDiary = diaryService.saveDailyDiary(userId, addDailyDiaryRequest)
-        return AddDailyDiaryResponse(dailyDiary.title!!, dailyDiary.music!!)
+        return AddDailyDiaryResponse(dailyDiary.title!!, dailyDiary.music?.title)
     }
 
 }
