@@ -1,8 +1,11 @@
 package com.jyami.gemapi.repository.diary
 
+import com.google.api.core.ApiFuture
+import com.google.cloud.firestore.FieldValue
 import com.google.cloud.firestore.Firestore
 import com.jyami.gemapi.repository.FirebaseUtil.performBlockOperation
 import com.jyami.gemapi.repository.FirebaseUtil.toMap
+
 
 class DiaryRepositoryFirebaseImpl(
     private val firestore: Firestore
@@ -49,6 +52,15 @@ class DiaryRepositoryFirebaseImpl(
 
         return performBlockOperation {
             documentRef.set(dailyDailyDocument).get()
+        }
+    }
+
+    override fun deleteDailyDiary(userId: String, targetDate: String): Boolean {
+        val documentRef = firestore.collection(COLLECTION_NAME)
+            .document(userId)
+
+        return performBlockOperation {
+            documentRef.update(mapOf(targetDate to FieldValue.delete())).get()
         }
     }
 }

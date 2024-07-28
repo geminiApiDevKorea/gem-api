@@ -1,6 +1,7 @@
 package com.jyami.gemapi.repository.diary
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
+import com.jyami.gemapi.endpoint.MusicContents
 
 // null 처리는 firebase 를 사용함에 따라 어쩔 수 없이 발생한 문제이다.
 data class Diary(
@@ -10,7 +11,9 @@ data class Diary(
 
 data class DailyDiary(
     val title: String? = null,
-    val music: String? = null,
+    val music: MusicContents? = null,
+    val type: String? = null,
+    val tag: List<String>? = null,
     val contents: List<ChatContent>? = null,
 )
 
