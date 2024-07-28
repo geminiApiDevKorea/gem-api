@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "master", "feature/GEM-9-music" ]
+    branches: [ "master" ]
 
 env:
   PROJECT_ID: gems-gemini-api-competition #  Google Cloud project id
