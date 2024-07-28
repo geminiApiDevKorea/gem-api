@@ -35,4 +35,19 @@ class DiaryService(
         throw RuntimeException("fail to save dailyDiary")
     }
 
+    fun deleteDailyDiary(userId: String, targetDate: String): String {
+        val findDailyDiary = diaryRepository.existDailyDiary(userId)
+
+        val success = if (findDailyDiary) {
+            diaryRepository.deleteDailyDiary(userId, targetDate)
+        }else{
+            throw IllegalArgumentException("not exist dailyDiary")
+        }
+
+        if (success){
+            return targetDate
+        }
+        throw RuntimeException("fail to save dailyDiary")
+    }
+
 }

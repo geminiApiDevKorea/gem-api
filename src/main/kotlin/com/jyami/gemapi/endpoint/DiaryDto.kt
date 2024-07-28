@@ -44,5 +44,5 @@ data class AddDailyDiaryRequest(
 data class AddDailyDiaryResponse(
     val title: String,
     val music: String?,
-)
+): ResponseDto()
 

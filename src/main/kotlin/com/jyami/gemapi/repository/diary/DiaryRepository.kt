@@ -7,4 +7,5 @@ interface DiaryRepository {
     fun existDailyDiary(userId: String): Boolean
     fun saveDailyDiary(userId: String, dateTime: String, dailyDiary: DailyDiary): Boolean
     fun findAllDailyDiary(userId: String): MutableMap<String, Any>?
+    fun deleteDailyDiary(userId: String, targetDate: String): Boolean
 }
