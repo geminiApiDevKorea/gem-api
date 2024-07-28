@@ -43,9 +43,4 @@ class ChatController(
         return DiaryChatResponse(chatResponse, musicResponse)
     }
 
-
-    @GetMapping("/test")
-    fun test(): String {
-        return "test"
-    }
 }

@@ -1,6 +1,6 @@
 package com.jyami.gemapi.service
 
-import com.jyami.gemapi.endpoint.MusicContents
+import com.jyami.gemapi.endpoint.DiaryChatResponse
 import com.jyami.gemapi.utils.MapperUtil.MAPPER
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.chat.model.ChatResponse
@@ -20,18 +20,19 @@ class ChatService(
             .chatResponse()
     }
 
-    fun musicApiResponse(chatResponse: ChatResponse): MusicContents {
+    fun musicApiResponse(chatResponse: ChatResponse): DiaryChatResponse.MusicResponse {
         val content = chatResponse.result.output.content
         val songResponse = MAPPER.readValue(content, ChatMusicResponse::class.java)
 
         val searchMusic = youtubeService.searchMusic("${songResponse.song?.singer}, ${songResponse.song?.title}")
         return with(searchMusic){
-            MusicContents(
+            DiaryChatResponse.MusicResponse(
                 id.videoId,
                 "https://www.youtube.com/watch?v=${id.videoId}",
                 snippet.title,
                 snippet.description,
-                snippet.thumbnails.medium.url)
+                snippet.thumbnails.medium.url
+            )
         }
     }
 
@@ -44,9 +45,5 @@ class ChatService(
             val title: String?
         )
     }
-
-
-
-
 
 }

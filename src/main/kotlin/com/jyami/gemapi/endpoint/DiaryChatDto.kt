@@ -22,13 +22,17 @@ data class History(
 
 data class DiaryChatResponse(
     val chatResponse: ChatResponse,
-    val music : MusicContents? = null
-) : ResponseDto()
+    val music : MusicResponse? = null
+) : ResponseDto(){
 
-data class MusicContents(
-    val id: String,
-    val url: String,
-    val title: String,
-    val description: String,
-    val thumbnailUrl : String
-)
+    data class MusicResponse(
+        val id: String,
+        val url: String,
+        val title: String,
+        val description: String,
+        val thumbnailUrl : String
+    )
+
+
+}
+

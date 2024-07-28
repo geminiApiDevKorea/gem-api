@@ -9,19 +9,31 @@ import java.time.LocalDate
 
 data class GetDiaryResponse(
     @field:JsonUnwrapped
-    val dateMap: Map<String, DailyDiary> = emptyMap() // key : YYYY-MM-DD
-){
-    data class DailyDiary(
+    val diary: List<DailyDiaryResponse> = emptyList()
+) : ResponseDto() {
+    data class DailyDiaryResponse(
+        val date: String, // YYYY-MM-DD
         val title: String,
-        val music: String,
+        val music: MusicContent,
         val contents: List<ChatContent>,
+        val type: String,
+        val tag: List<String>? = null,
     )
 
     data class ChatContent(
         val role: String,
         val message: String,
     )
+
+    data class MusicContent(
+        val id: String,
+        val url: String,
+        val title: String,
+        val description: String,
+        val thumbnailUrl: String
+    )
 }
+
 
 data class AddDailyDiaryRequest(
 //    val userId: String,
@@ -31,18 +43,26 @@ data class AddDailyDiaryRequest(
     val contents: List<ChatContent>,
     val type: String,
     val tag: List<String>?,
-    val music: MusicContents
-){
+    val music: MusicRequest
+) {
     data class ChatContent(
         @field:Pattern(regexp = "assistant|user", message = "Role must be either 'assistant' or 'user'")
         val role: String,
         @field:NotBlank
         val message: String,
     )
+
+    data class MusicRequest(
+        val id: String,
+        val url: String,
+        val title: String,
+        val description: String,
+        val thumbnailUrl: String
+    )
 }
 
 data class AddDailyDiaryResponse(
     val title: String,
     val music: String?,
-): ResponseDto()
+) : ResponseDto()
 

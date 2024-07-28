@@ -1,24 +1,30 @@
 package com.jyami.gemapi.repository.diary
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
-import com.jyami.gemapi.endpoint.MusicContents
 
-// null 처리는 firebase 를 사용함에 따라 어쩔 수 없이 발생한 문제이다.
+// 여기는 firebase에서 바로 toObject를 안해서 null 처리를 안해도 된다.
 data class Diary(
     @field:JsonUnwrapped
-    val dateMap: Map<String, DailyDiary>? = null, // key: YYYY-MM-DD // value: DailyDiaryId
+    val dateMap: Map<String, DailyDiary> = emptyMap(), // key: YYYY-MM-DD // value: DailyDiaryId
 )
 
 data class DailyDiary(
-    val title: String? = null,
-    val music: MusicContents? = null,
-    val type: String? = null,
+    val title: String,
+    val music: MusicContent,
+    val type: String,
     val tag: List<String>? = null,
-    val contents: List<ChatContent>? = null,
+    val contents: List<ChatContent>,
 )
 
 data class ChatContent(
-    val role: String? = null,
-    val message: String? = null,
-    val localDateTime: String? = null // localDateTime
+    val role: String,
+    val message: String
+)
+
+data class MusicContent(
+    val id: String,
+    val url: String,
+    val title: String,
+    val description: String,
+    val thumbnailUrl : String
 )

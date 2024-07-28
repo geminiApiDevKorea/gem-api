@@ -1,10 +1,10 @@
 package com.jyami.gemapi.repository.diary
 
-import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.FieldValue
 import com.google.cloud.firestore.Firestore
 import com.jyami.gemapi.repository.FirebaseUtil.performBlockOperation
 import com.jyami.gemapi.repository.FirebaseUtil.toMap
+import com.jyami.gemapi.utils.MapperUtil.MAPPER
 
 
 class DiaryRepositoryFirebaseImpl(
@@ -15,14 +15,25 @@ class DiaryRepositoryFirebaseImpl(
         const val COLLECTION_NAME = "diary"
     }
 
-    override fun findAllDailyDiary(userId: String) : MutableMap<String, Any>? {
-        val documentSnapshot = firestore.collection(COLLECTION_NAME)
+    override fun findAllDailyDiary(userId: String) : Diary {
+        val documentMap = firestore.collection(COLLECTION_NAME)
             .document(userId)
             .get()
             .get()
+            .data
 
-        return documentSnapshot.data
+        val documents = documentMap?.mapValues { (key, value) -> makeDailyDiary(value) } ?: emptyMap()
+        return Diary(dateMap = documents)
+    }
 
+    private fun makeDailyDiary(value: Any): DailyDiary {
+        return MAPPER.convertValue(value, DailyDiary::class.java)
+    }
+
+    fun findDailyDiaryByMonth(userId: String){
+        val docRef = firestore.collection(COLLECTION_NAME)
+            .document(userId)
+        docRef
     }
 
     override fun existDailyDiary(userId: String): Boolean {
