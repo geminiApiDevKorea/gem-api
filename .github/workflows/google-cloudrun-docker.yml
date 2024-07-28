@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feature/GEM-9-music" ]
 
 env:
   PROJECT_ID: gems-gemini-api-competition #  Google Cloud project id
@@ -57,12 +57,13 @@ jobs:
           GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
           GEMINI_LOCATION: ${{ secrets.GEMINI_LOCATION }}
           FIREBASE_CONFIG_PATH: /app/firebase-service-account.json
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: |-
           gcloud run deploy ${{ env.SERVICE }} --image $IMAGE_NAME \
           --platform managed \
           --region ${{ env.REGION }} \
           --allow-unauthenticated \
-          --set-env-vars GEMINI_PROJECT_ID=${{ secrets.GEMINI_PROJECT_ID }},GEMINI_LOCATION=${{ secrets.GEMINI_LOCATION }},FIREBASE_CONFIG_PATH=$FIREBASE_CONFIG_PATH
+          --set-env-vars GEMINI_PROJECT_ID=${{ secrets.GEMINI_PROJECT_ID }},GEMINI_LOCATION=${{ secrets.GEMINI_LOCATION }},FIREBASE_CONFIG_PATH=$FIREBASE_CONFIG_PATH,YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
