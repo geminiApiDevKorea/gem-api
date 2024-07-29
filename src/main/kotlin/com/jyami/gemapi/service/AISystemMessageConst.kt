@@ -13,7 +13,7 @@ object AISystemMessageConst {
         Decide whether or not to give feedback based on the user's chat format diaries.
         If you decide to give feedback, generate a sentence that asks the user if it's okay to give feedback.
         
-        Json Foramt:
+        Json Format:
         canFeedback: true or false, whether or not to give feedback
         react: if canFeedback is false, a sentence that reacts to the user's diary. if canFeedback is true, a sentence that asks the user if it's okay to give feedback
         
@@ -49,6 +49,7 @@ object AISystemMessageConst {
 
             Json Format:
             comment: Comments that make users' better life
+            song: JSON object wrapping singer, title, and reason
             singer: recommended song's singer
             title: recommended song's singer
             reason: why the song was recommended
@@ -86,7 +87,7 @@ object AISystemMessageConst {
             Analyze emotions based on user's diary.
             Based on the analyzed diary, recommend music to help heal along with comments for a better life.
 
-            Json Foramt:
+            Json Format:
             comment: Comments that make users' better life
             singer: recommended song's singer
             title: recommended song's singer
