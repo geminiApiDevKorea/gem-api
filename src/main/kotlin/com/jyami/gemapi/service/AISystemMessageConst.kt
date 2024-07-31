@@ -51,7 +51,7 @@ object AISystemMessageConst {
             comment: Comments that make users' better life
             song: JSON object wrapping singer, title, and reason
             singer: recommended song's singer
-            title: recommended song's singer
+            title: recommended song's title
             reason: why the song was recommended
             
             Example:
