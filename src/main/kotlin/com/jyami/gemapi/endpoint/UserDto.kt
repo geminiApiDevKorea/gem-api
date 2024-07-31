@@ -2,6 +2,7 @@ package com.jyami.gemapi.endpoint
 
 import com.jyami.gemapi.repository.user.User
 import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
 
 // TODO:  현재 사용하는 추가 필드정보 없음. 있으면 추가
 data class AgreementRequest(
@@ -9,6 +10,7 @@ data class AgreementRequest(
 )
 
 data class UserInfoRequest(
+    @Size(max = 10, message = "Nickname must be less than 10 characters")
     val nickname: String,
     @field:Pattern(regexp = "MALE|FEMALE", message = "Role must be either 'MALE' or 'FEMALE'")
     val gender: String
