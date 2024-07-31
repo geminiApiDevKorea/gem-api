@@ -1,6 +1,7 @@
 package com.jyami.gemapi.controller
 
 import com.jyami.gemapi.endpoint.AgreementRequest
+import com.jyami.gemapi.endpoint.UserInfoRequest
 import com.jyami.gemapi.endpoint.UserInfoResponse
 import com.jyami.gemapi.repository.user.User
 import com.jyami.gemapi.service.AuthService
@@ -25,13 +26,14 @@ class UserController(
 
     @PostMapping("")
     fun registerUser(
-        @RequestHeader("Authorization") authorization: String
+        @RequestHeader("Authorization") authorization: String,
+        @RequestBody userInfoRequest: UserInfoRequest
     ): UserInfoResponse {
         val validateAndGetUserToken = authService.validateAndGetUserToken(authorization)
 
         val user = userService.loadUserById(validateAndGetUserToken.uid)
         if (user == null) {
-            val savedUser = userService.saveUser(validateAndGetUserToken)
+            val savedUser = userService.saveUser(validateAndGetUserToken, userInfoRequest)
             return UserInfoResponse(savedUser)
         }
         return UserInfoResponse(user)

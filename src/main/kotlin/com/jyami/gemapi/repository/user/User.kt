@@ -8,7 +8,9 @@ data class User(
     val id: String? = null,
     val name: String? = null,
     val email: String? = null,
-    val agreement: Boolean = false
+    val agreement: Boolean = false,
+    val gender: String? = null,
+    val nickname: String? = null
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority>? {
