@@ -1,9 +1,9 @@
 package com.jyami.gemapi.endpoint
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
-import org.springframework.ai.chat.model.ChatResponse
 
 data class DiaryChatRequest(
     @field:NotBlank
@@ -21,18 +21,16 @@ data class History(
 )
 
 data class DiaryChatResponse(
-    val chatResponse: ChatResponse,
-    val music : MusicResponse? = null
-) : ResponseDto(){
+    @JsonProperty("chatPromptResponse")
+    val chatPromptResponse: ChatPromptResponse,
+) : ResponseDto()
 
-    data class MusicResponse(
-        val id: String,
-        val url: String,
-        val title: String,
-        val description: String,
-        val thumbnailUrl : String
-    )
+
+data class DiaryFeedbackChatResponse(
+    @JsonProperty("chatPromptResponse")
+    val chatMusicPromptResponse: ChatMusicResponse,
+    val music : MusicApiResponse
+) : ResponseDto(){
 
 
 }
-

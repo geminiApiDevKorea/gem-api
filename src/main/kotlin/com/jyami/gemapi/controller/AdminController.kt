@@ -4,6 +4,7 @@ import com.jyami.gemapi.endpoint.AddDailyDiaryRequest
 import com.jyami.gemapi.endpoint.AddDailyDiaryResponse
 import com.jyami.gemapi.endpoint.DiaryChatRequest
 import com.jyami.gemapi.endpoint.DiaryChatResponse
+import com.jyami.gemapi.endpoint.DiaryFeedbackChatResponse
 import com.jyami.gemapi.endpoint.EmptyResponse
 import com.jyami.gemapi.endpoint.GetDiaryResponse
 import com.jyami.gemapi.endpoint.StatusCode
@@ -73,7 +74,7 @@ class AdminController (
     }
 
     @PostMapping("/chats/prompt")
-    fun makeDiaryAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest): DiaryChatResponse? {
+    fun makeDiaryAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest): DiaryChatResponse {
         val chatResponse = chatService.makeChatResponse(diaryDto.userInput, makeDiarySystem(diaryDto.history))
         return DiaryChatResponse(chatResponse)
     }
@@ -81,15 +82,16 @@ class AdminController (
 
     @PostMapping("/chats/feedback")
     fun makeDiaryFeedbackAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest,
-                                  @RequestParam("type", required = true)  type: String): DiaryChatResponse? {
-        val chatResponse = when (type) {
-            "chat" -> chatService.makeChatResponse(diaryDto.userInput, makeMusicRecommendSystem(diaryDto.history))
-            "post" -> chatService.makeChatResponse(diaryDto.userInput, makeMusicRecommendFromPostSystem())
+                                  @RequestParam("type", required = true)  type: String): DiaryFeedbackChatResponse {
+        val chatMusicResponse = when (type) {
+            "chat" -> chatService.makeChatResponseToMusic(diaryDto.userInput, makeMusicRecommendSystem(diaryDto.history))
+            "post" -> chatService.makeChatResponseToMusic(diaryDto.userInput, makeMusicRecommendFromPostSystem())
             else -> throw IllegalArgumentException("type is not valid")
         }
 
-        val musicResponse = chatService.musicApiResponse(chatResponse)
-        return DiaryChatResponse(chatResponse, musicResponse)
+        val musicResponse = chatService.musicApiResponse(chatMusicResponse)
+
+        return DiaryFeedbackChatResponse(chatMusicResponse, musicResponse)
     }
 
 }

@@ -2,6 +2,7 @@ package com.jyami.gemapi.controller
 
 import com.jyami.gemapi.endpoint.DiaryChatRequest
 import com.jyami.gemapi.endpoint.DiaryChatResponse
+import com.jyami.gemapi.endpoint.DiaryFeedbackChatResponse
 import com.jyami.gemapi.service.AISystemMessageConst.makeDiarySystem
 import com.jyami.gemapi.service.AISystemMessageConst.makeMusicRecommendFromPostSystem
 import com.jyami.gemapi.service.AISystemMessageConst.makeMusicRecommendSystem
@@ -32,15 +33,16 @@ class ChatController(
 
     @PostMapping("/feedback")
     fun makeDiaryFeedbackAIClient(@Valid @RequestBody diaryDto: DiaryChatRequest,
-                                  @RequestParam("type", required = true)  type: String): DiaryChatResponse? {
-        val chatResponse = when (type) {
-            "chat" -> chatService.makeChatResponse(diaryDto.userInput, makeMusicRecommendSystem(diaryDto.history))
-            "post" -> chatService.makeChatResponse(diaryDto.userInput, makeMusicRecommendFromPostSystem())
+                                  @RequestParam("type", required = true)  type: String): DiaryFeedbackChatResponse {
+        val chatMusicResponse = when (type) {
+            "chat" -> chatService.makeChatResponseToMusic(diaryDto.userInput, makeMusicRecommendSystem(diaryDto.history))
+            "post" -> chatService.makeChatResponseToMusic(diaryDto.userInput, makeMusicRecommendFromPostSystem())
             else -> throw IllegalArgumentException("type is not valid")
         }
 
-        val musicResponse = chatService.musicApiResponse(chatResponse)
-        return DiaryChatResponse(chatResponse, musicResponse)
+        val musicResponse = chatService.musicApiResponse(chatMusicResponse)
+
+        return DiaryFeedbackChatResponse(chatMusicResponse, musicResponse)
     }
 
 }
