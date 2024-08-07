@@ -26,14 +26,14 @@ data class ChatPromptResponse(
 )
 
 data class MusicApiResponse(
-    @Schema(description = "Youtube Data API : video 식별정보", required = true)
+    @Schema(description = "YouTube Data API: Video identifier", required = true)
     val id: String,
-    @Schema(description = "id를 기반으로 조합한 youtube url", required = true)
+    @Schema(description = "YouTube URL generated based on the id", required = true)
     val url: String,
-    @Schema(description = "Youtube Data API : video 제목", required = true)
+    @Schema(description = "YouTube Data API: Video title", required = true)
     val title: String,
-    @Schema(description = "Youtube Data API : video 설명", required = true)
+    @Schema(description = "YouTube Data API: Video description", required = true)
     val description: String,
-    @Schema(description = "Youtube Data API : 썸네일 url (width=320, height=180)", required = true)
+    @Schema(description = "YouTube Data API: Thumbnail URL (width=320, height=180)", required = true)
     val thumbnailUrl: String
 )
