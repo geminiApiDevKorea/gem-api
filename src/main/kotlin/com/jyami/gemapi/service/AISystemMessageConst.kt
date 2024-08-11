@@ -23,17 +23,17 @@ object AISystemMessageConst {
         
         {{
           "canFeedback": false,
-          "react": "잘 지냈어요?"
+          "react": "How have you been?"
         }}
         
         Example2:
-        오늘 잘 지냈어?
-        나는 힘들었어.
-        오랫동안 준비해온 시험에서 떨어졌거든
+        How was your day today?
+        I had a tough day.
+        I failed an exam that I had been preparing for a long time.
         
         {{
           "canFeedback": true,
-          "react": "오랫동안 준비해온 시험에서 떨어지는건 정말 힘든 일이에요. 이에 대해 조언을 드리고 싶은데 괜찮을까요?"
+          "react": "Failing an exam you've been preparing for a long time is really tough. Would it be okay if I offer some advice about this?"
         }}
             
         History:
