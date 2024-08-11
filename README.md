@@ -19,7 +19,8 @@ The project uses Gradle for build automation.
 - GitHub Actions
 
 ## Project Structure
-TBD
+![muse-dairy_ drawio](https://github.com/user-attachments/assets/052a8f77-70e3-466c-9234-975d63f6350c)
+
 
 ## documents
 https://gem-api-xphhnkqc6a-du.a.run.app/swagger-ui/index.html
@@ -27,9 +28,9 @@ https://gem-api-xphhnkqc6a-du.a.run.app/swagger-ui/index.html
 ---
 ## extra descriptions
 #### Gemini AI 호출 방법
-- spring-ai에 정의된 VertexAiGeminiChatModel을 사용하여 호출하였습니다.
+- Called using VertexAiGeminiChatModel defined in spring-ai.
 - https://docs.spring.io/spring-ai/reference/api/chat/vertexai-gemini-chat.html
-- 서버단에서 GCP_CREDENTIALS을 사용하여 인증하고, GCP console에 정의해둔 vertex api 설정(PROJECT_ID, LOCATION_ID, AGENT_ID)을 사용하여 호출하였습니다.
+- Authenticated using GCP_CREDENTIALS on the server side and called using the vertex API settings (PROJECT_ID, LOCATION_ID, AGENT_ID) defined in the GCP console.
 - [ai config source code](./src/main/kotlin/com/jyami/gemapi/config/AiConfig.kt)
 
 
@@ -47,13 +48,13 @@ https://gem-api-xphhnkqc6a-du.a.run.app/swagger-ui/index.html
 - Contextual History: The history of the conversation is provided. This helps the AI provide more personalized and relevant recommendations.
 - [used prompt code](./src/main/kotlin/com/jyami/gemapi/service/AISystemMessageConst.kt)
 
-#### 어떤 메소드를 사용하여 입력 메시지에 대한 응답을 받을 수 있었는지
+#### Which method could be used to receive a response to the input message
 
-spring-ai의 ChatClient를 사용하여 입력 메시지에 대한 응답을 받았습니다. 
+I used spring-ai's ChatClient to get a response to an input message. 
 
-spring-ai의 래핑된 객체를 사용한 것이고 사실상 안에 코드를 까보았을 때 : {Location}-aiplatform.googleapis.com을 엔드포인트로 요청을 보내고있습니다.
+It uses spring-ai's wrapped object, and in fact, when you look at the code inside: {Location}-aiplatform.googleapis.com is being sent to the endpoint.
 
-공식문서는 : https://docs.spring.io/spring-ai/reference/api/chat/vertexai-gemini-chat.html
+offical document : https://docs.spring.io/spring-ai/reference/api/chat/vertexai-gemini-chat.html
 ```
 return chatClient.prompt()
 .system(systemPrompt)
@@ -63,7 +64,6 @@ return chatClient.prompt()
 ```
 
 #### 응답 결과 예시
-이걸 원하시는건가해서.. 우선은 gem api를 사용하는 api 응답 결과만 넣었습니다. 아니면 연희님이 직접 요청해보고싶은 예시 request 주세요
 
 ###### GET/chats/prompt 
 - request
