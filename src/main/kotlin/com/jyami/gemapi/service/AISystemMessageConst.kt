@@ -12,6 +12,7 @@ object AISystemMessageConst {
         Analyze emotions based on user's diary.
         Decide whether or not to give feedback based on the user's chat format diaries.
         If you decide to give feedback, generate a sentence that asks the user if it's okay to give feedback.
+        answer in ENGLISH.
         
         Json Format:
         canFeedback: true or false, whether or not to give feedback
