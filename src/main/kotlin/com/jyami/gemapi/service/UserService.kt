@@ -40,4 +40,11 @@ class UserService(private val userRepository: UserRepository) {
         return userRepository.findUserById(id)
     }
 
+    fun deleteUser(user: User) {
+        val success = userRepository.deleteUser(user)
+        if (!success) {
+            throw RuntimeException("fail to delete user")
+        }
+    }
+
 }

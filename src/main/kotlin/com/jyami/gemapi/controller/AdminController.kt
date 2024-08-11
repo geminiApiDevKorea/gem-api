@@ -1,21 +1,21 @@
 package com.jyami.gemapi.controller
 
-import com.jyami.gemapi.endpoint.AddDailyDiaryRequest
-import com.jyami.gemapi.endpoint.AddDailyDiaryResponse
-import com.jyami.gemapi.endpoint.DiaryChatRequest
-import com.jyami.gemapi.endpoint.DiaryChatResponse
-import com.jyami.gemapi.endpoint.DiaryFeedbackChatResponse
-import com.jyami.gemapi.endpoint.EmptyResponse
-import com.jyami.gemapi.endpoint.GetDiaryResponse
-import com.jyami.gemapi.endpoint.StatusCode
+import com.jyami.gemapi.endpoint.*
+import com.jyami.gemapi.repository.user.User
 import com.jyami.gemapi.service.AISystemMessageConst.makeDiarySystem
 import com.jyami.gemapi.service.AISystemMessageConst.makeMusicRecommendFromPostSystem
 import com.jyami.gemapi.service.AISystemMessageConst.makeMusicRecommendSystem
 import com.jyami.gemapi.service.ChatService
 import com.jyami.gemapi.service.DiaryService
+import com.jyami.gemapi.service.UserService
 import com.jyami.gemapi.utils.MapperUtil.isValidYearMonth
+import io.swagger.v3.oas.annotations.Hidden
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
 import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -28,9 +28,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("admin")
+@Hidden
 class AdminController (
     private val diaryService: DiaryService,
-    private val chatService: ChatService
+    private val chatService: ChatService,
+    private val userService: UserService
 ){
     @GetMapping("/diary/{userId}")
     fun getDiaryTest(
@@ -92,6 +94,16 @@ class AdminController (
         val musicResponse = chatService.musicApiResponse(chatMusicResponse)
 
         return DiaryFeedbackChatResponse(chatMusicResponse, musicResponse)
+    }
+
+    @DeleteMapping("{userId}")
+    fun deleteUser(
+        @PathVariable userId: String,
+    ): ResponseDto {
+        userService.loadUserById(userId)?.let {
+            userService.deleteUser(it)
+        }
+        return ResponseDto()
     }
 
 }

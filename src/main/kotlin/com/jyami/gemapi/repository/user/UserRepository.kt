@@ -9,4 +9,6 @@ interface UserRepository {
     fun saveUser(user: User): Boolean
 
     fun updateAgreement(user: User, agreement: Boolean): Boolean
+
+    fun deleteUser(user: User) : Boolean
 }

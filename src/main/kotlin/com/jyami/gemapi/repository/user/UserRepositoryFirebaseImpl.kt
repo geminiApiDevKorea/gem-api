@@ -48,4 +48,13 @@ class UserRepositoryFirebaseImpl(
         }
     }
 
+    override fun deleteUser(user: User): Boolean {
+        val documentRef = firestore.collection(COLLECTION_NAME)
+            .document(user.id!!)
+
+        return performBlockOperation {
+            documentRef.delete().get()
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.jyami.gemapi.controller
 
 import com.jyami.gemapi.endpoint.AgreementRequest
+import com.jyami.gemapi.endpoint.ResponseDto
 import com.jyami.gemapi.endpoint.UserSignupRequest
 import com.jyami.gemapi.endpoint.UserInfoResponse
 import com.jyami.gemapi.repository.user.User
@@ -10,13 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -79,4 +74,21 @@ class UserController(
         val user = (authentication.principal as User)
         return UserInfoResponse(user)
     }
+
+    @DeleteMapping("")
+    @Operation(
+        summary = "Delete account API",
+        description = "Deletes the user's account. The user's information is deleted from the database, and the user's token is invalidated.",
+        parameters = [
+            Parameter(`in` = ParameterIn.HEADER, name = "Authorization", description = "Bearer Token", required = true),
+        ]
+    )
+    fun deleteUser(
+        authentication: Authentication
+    ): ResponseDto {
+        val user = (authentication.principal as User)
+        userService.deleteUser(user)
+        return ResponseDto()
+    }
+
 }

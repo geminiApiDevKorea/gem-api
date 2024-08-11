@@ -15,8 +15,8 @@ data class UserSignupRequest(
     @Schema(description = "User's nickname", maxLength = 10, required = true)
     val nickname: String,
 
-    @field:Pattern(regexp = "MALE|FEMALE", message = "Gender must be either 'MALE' or 'FEMALE'")
-    @Schema(description = "User's gender", pattern = "MALE|FEMALE", required = true)
+    @field:Pattern(regexp = "MALE|FEMALE|OTHERS", message = "Gender must be among 'MALE', 'FEMALE' or 'OTHERS'")
+    @Schema(description = "User's gender", pattern = "MALE|FEMALE|OTHERS", required = true)
     val gender: String
 )
 
